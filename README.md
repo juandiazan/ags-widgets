@@ -43,13 +43,7 @@ The stylesheet uses **GoMono Nerd Font**. Install it from [nerdfonts.com](https:
 It may be necessary to specify the installed GTK version with the `--gtk` flag when starting the service (also on Hyprland autostart).
 
 ```sh
-ags run ~/.config/ags
-```
-
-**Start with hot-reload** (rebuilds on file changes)
-
-```sh
-ags run --watch ~/.config/ags
+ags run
 ```
 
 **Toggle a window** (the window must already be running)

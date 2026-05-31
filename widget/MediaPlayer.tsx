@@ -63,7 +63,7 @@ function PlayerHeader({ player }: { player: Mpris.Player }) {
       />
       <button
         class="focus-btn"
-        label="  "
+        label=""
         onClicked={() =>
           execAsync(`${HOME_DIR}/dotfiles/scripts/focus-player.sh`)
         }
