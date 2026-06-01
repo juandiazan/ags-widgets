@@ -71,6 +71,16 @@ window {
     color: #55d4b2;
 }
 
+.cava-viz {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.time-label {
+    font-size: 11px;
+    color: #9a578a;
+}
+
 .progress trough {
     background-color: #3c3449;
     border-radius: 4px;

@@ -139,7 +139,6 @@ function MicSlider() {
         min={0}
         max={1}
         value={volume}
-        visible={false}
         onNotifyValue={(self) => microphone.peek()?.set_volume(self.value)}
       />
     </box>
@@ -156,7 +155,7 @@ export default function ControlPanel() {
       exclusivity={Astal.Exclusivity.NORMAL}
       marginBottom={10}
       marginRight={10}
-      visible={true}
+      visible={false}
     >
       <box
         class="control-panel"

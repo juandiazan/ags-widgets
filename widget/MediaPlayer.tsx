@@ -4,12 +4,13 @@ import { Astal, Gtk } from "ags/gtk4"
 import { createPoll } from "ags/time"
 import app from "ags/gtk4/app"
 import Mpris from "gi://AstalMpris?version=0.1"
+import Cava from "gi://AstalCava"
 import Pango from "gi://Pango"
 import GLib from "gi://GLib"
 
 const HOME_DIR = GLib.get_home_dir()
 const ART_SIZE = 150
-const PLAYER_WIDTH = 460
+const PLAYER_WIDTH = 520
 const ART_POLL_INTERVAL_MS = 1000
 const PLAYER_POLL_INTERVAL = 500
 const IGNORED_PLAYERS = ["firefox", "librewolf"]
@@ -29,7 +30,7 @@ function selectActivePlayer(mpris: Mpris.Mpris): Mpris.Player | null {
 function AlbumArt({ artPath }: { artPath: Accessor<string> }) {
   const css = createComputed(() => {
     const path = artPath()
-    const base = `min-width: ${ART_SIZE}px; min-height: ${ART_SIZE}px; border-radius: 8px;`
+    const base = `min-width: ${ART_SIZE}px; min-height: ${ART_SIZE}px; max-width: ${ART_SIZE}px; max-height: ${ART_SIZE}px; border-radius: 8px;`
     return path
       ? `${base} background-image: url("file://${path}"); background-size: cover; background-position: center;`
       : base
@@ -41,6 +42,8 @@ function AlbumArt({ artPath }: { artPath: Accessor<string> }) {
       widthRequest={ART_SIZE}
       heightRequest={ART_SIZE}
       hexpand={false}
+      vexpand={false}
+      valign={Gtk.Align.CENTER}
       css={css}
     />
   )
@@ -72,20 +75,64 @@ function PlayerHeader({ player }: { player: Mpris.Player }) {
   )
 }
 
+function CavaVisualizer() {
+  const cava = Cava.get_default()
+  const area = new Gtk.DrawingArea()
+
+  area.hexpand = true
+  area.heightRequest = 60
+  area.add_css_class("cava-viz")
+
+  area.set_draw_func((_: any, cr: any, w: number, h: number) => {
+    const values: number[] = cava?.values ?? []
+    const n = values.length
+    if (!n) return
+
+    const gap = 2
+    const barW = Math.max(1, (w - gap * (n - 1)) / n)
+
+    cr.setSourceRGBA(0.141, 0.616, 0.616, 0.9)
+
+    for (let i = 0; i < n; i++) {
+      const barH = Math.max(2, values[i] * h)
+      const x = i * (barW + gap)
+      const y = h - barH
+      cr.rectangle(x, y, barW, barH)
+      cr.fill()
+    }
+  })
+
+  cava?.connect("notify::values", () => area.queue_draw())
+
+  return area
+}
+
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${m}:${s.toString().padStart(2, "0")}`
+}
+
 function ProgressBar({ player }: { player: Mpris.Player }) {
   const position = createBinding(player, "position")
   const length = createBinding(player, "length")
   const trackDuration = createComputed(() => Math.max(length(), 1))
+  const timeLabel = createComputed(
+    () => `${formatTime(position())} / ${formatTime(trackDuration())}`,
+  )
 
   return (
-    <slider
-      class="progress"
-      hexpand
-      min={0}
-      max={trackDuration}
-      value={position}
-      onNotifyValue={(self) => player.set_position(self.value)}
-    />
+    <box orientation={Gtk.Orientation.HORIZONTAL} spacing={6}>
+      <slider
+        class="progress"
+        hexpand
+        min={0}
+        max={trackDuration}
+        value={position}
+        onNotifyValue={(self) => player.set_position(self.value)}
+      />
+      <label class="time-label" label={timeLabel} />
+    </box>
   )
 }
 
@@ -131,7 +178,7 @@ function PlayerWidget({
       orientation={Gtk.Orientation.HORIZONTAL}
       widthRequest={PLAYER_WIDTH}
     >
-      <box class="art-box">
+      <box class="art-box" vexpand={false} valign={Gtk.Align.CENTER}>
         <AlbumArt artPath={artPath} />
       </box>
       <box
@@ -156,6 +203,7 @@ function PlayerWidget({
           ellipsize={Pango.EllipsizeMode.END}
           maxWidthChars={26}
         />
+        <CavaVisualizer />
         <ProgressBar player={player} />
         <PlayerControls player={player} />
       </box>
