@@ -21,6 +21,16 @@ Install npm dependencies after cloning:
 npm install
 ```
 
+### Installation
+
+```sh
+paru -S aylurs-gtk-shell # ags
+paru -S quarrel-git # for mpris astal lib
+paru -S libastal-mpris-git # for media player
+paru -S libastal-cava-git # for media player sound visualizer
+paru -S libastal-wireplumber-git # for control panel
+```
+
 ### Helper scripts
 
 The widgets rely on scripts located at `~/dotfiles/scripts/`. These scripts have their own dependencies:
