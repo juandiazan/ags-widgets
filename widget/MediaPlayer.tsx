@@ -194,14 +194,14 @@ function PlayerWidget({
           label={title}
           halign={Gtk.Align.START}
           ellipsize={Pango.EllipsizeMode.END}
-          maxWidthChars={26}
+          maxWidthChars={40}
         />
         <label
           class="artist"
           label={artist}
           halign={Gtk.Align.START}
           ellipsize={Pango.EllipsizeMode.END}
-          maxWidthChars={26}
+          maxWidthChars={40}
         />
         <CavaVisualizer />
         <ProgressBar player={player} />
