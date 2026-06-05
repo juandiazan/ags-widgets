@@ -1,6 +1,7 @@
 import { Gtk } from "ags/gtk4"
 import { createBinding, createComputed, createState, For } from "gnim"
 import AstalNetwork from "gi://AstalNetwork?version=0.1"
+import Gio from "gi://Gio"
 
 const network = AstalNetwork.get_default()!
 
