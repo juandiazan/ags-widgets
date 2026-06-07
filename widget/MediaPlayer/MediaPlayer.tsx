@@ -177,6 +177,8 @@ function PlayerWidget({
             class="player"
             orientation={Gtk.Orientation.HORIZONTAL}
             widthRequest={PLAYER_WIDTH}
+            onMap={(self) => self.add_css_class("animate-in")}
+            onUnmap={(self) => self.remove_css_class("animate-in")}
         >
             <box class="art-box" vexpand={false} valign={Gtk.Align.CENTER}>
                 <AlbumArt artPath={artPath} />
@@ -217,6 +219,8 @@ function NothingPlaying() {
             class="player"
             orientation={Gtk.Orientation.HORIZONTAL}
             widthRequest={PLAYER_WIDTH}
+            onMap={(self) => self.add_css_class("animate-in")}
+            onUnmap={(self) => self.remove_css_class("animate-in")}
         >
             <label
                 class="nothing-playing"

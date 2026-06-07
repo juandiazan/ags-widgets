@@ -111,6 +111,8 @@ export default function ControlPanel() {
                 widthRequest={PANEL_WIDTH}
                 heightRequest={PANEL_HEIGHT}
                 spacing={10}
+                onMap={(self) => self.add_css_class("animate-in")}
+                onUnmap={(self) => self.remove_css_class("animate-in")}
             >
                 <box
                     orientation={Gtk.Orientation.HORIZONTAL}
