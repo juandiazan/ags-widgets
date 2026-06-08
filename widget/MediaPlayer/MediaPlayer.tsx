@@ -8,7 +8,7 @@ import Cava from "gi://AstalCava"
 import Pango from "gi://Pango"
 import GLib from "gi://GLib"
 
-import { CLOSE_ANIMATION_TIME_MS } from "../constants"
+import { makeCloseAnimation, animateIn } from "../animations"
 
 const HOME_DIR = GLib.get_home_dir()
 const ART_SIZE = 200
@@ -68,7 +68,7 @@ function PlayerHeader({ player }: { player: Mpris.Player }) {
       />
       <button
         class="focus-btn"
-        label=""
+        label=""
         onClicked={() =>
           execAsync(`${HOME_DIR}/dotfiles/scripts/focus-player.sh`)
         }
@@ -179,8 +179,7 @@ function PlayerWidget({
       class="player"
       orientation={Gtk.Orientation.HORIZONTAL}
       widthRequest={PLAYER_WIDTH}
-      onMap={(self) => self.add_css_class("animate-in")}
-      onUnmap={(self) => self.remove_css_class("animate-in")}
+      {...animateIn}
     >
       <box class="art-box" vexpand={false} valign={Gtk.Align.CENTER}>
         <AlbumArt artPath={artPath} />
@@ -221,8 +220,7 @@ function NothingPlaying() {
       class="player"
       orientation={Gtk.Orientation.HORIZONTAL}
       widthRequest={PLAYER_WIDTH}
-      onMap={(self) => self.add_css_class("animate-in")}
-      onUnmap={(self) => self.remove_css_class("animate-in")}
+      {...animateIn}
     >
       <label
         class="nothing-playing"
@@ -249,8 +247,7 @@ export default function MediaPlayer() {
     getActivePlayer,
   )
 
-  let closingRef: Gtk.Widget | null = null
-  let isAnimatingOut = false
+  const { setRef, onNotifyVisible } = makeCloseAnimation()
 
   return (
     <window
@@ -261,29 +258,9 @@ export default function MediaPlayer() {
       exclusivity={Astal.Exclusivity.NORMAL}
       marginBottom={10}
       visible={false}
-      onNotifyVisible={(self) => {
-        if (!self.visible && !isAnimatingOut) {
-          isAnimatingOut = true
-          self.visible = true
-          closingRef?.add_css_class("animate-out")
-          GLib.timeout_add(
-            GLib.PRIORITY_DEFAULT,
-            CLOSE_ANIMATION_TIME_MS,
-            () => {
-              closingRef?.remove_css_class("animate-out")
-              self.visible = false
-              isAnimatingOut = false
-              return GLib.SOURCE_REMOVE
-            },
-          )
-        }
-      }}
+      onNotifyVisible={onNotifyVisible}
     >
-      <box
-        onMap={(self) => {
-          closingRef = self
-        }}
-      >
+      <box onMap={setRef}>
         <With value={player}>
           {(p) =>
             p ? (
