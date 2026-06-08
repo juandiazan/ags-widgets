@@ -1,0 +1,1 @@
+export const CLOSE_ANIMATION_TIME_MS = 200;
