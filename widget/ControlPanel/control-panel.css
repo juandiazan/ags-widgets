@@ -110,6 +110,21 @@
     color: #c91629;
 }
 
+.volume-control-mute {
+    background-color: #55d4b2;
+    color: rgb(15, 16, 21);
+    border: none;
+    box-shadow: none;
+    outline: none;
+    border-radius: 9999px;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.volume-control-mute.muted {
+    background-color: #c91629;
+}
+
 .cp-slider trough {
     background-color: #3c3449;
     border-radius: 4px;

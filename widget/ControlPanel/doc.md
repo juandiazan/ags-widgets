@@ -39,7 +39,7 @@ Each AP row has:
 
 Only one AP row can be expanded at a time, tracked by `expandedBssid` state.
 
-### OutputSlider / MicSlider
+### VolumeControl (×2: output / mic)
 Bind to `AstalWireplumber.defaultSpeaker` / `defaultMicrophone` via a nested computed that re-binds when the default device changes. Volume shown as percentage, slider writes back via `set_volume`.
 
 ## State

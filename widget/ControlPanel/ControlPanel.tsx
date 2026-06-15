@@ -5,7 +5,7 @@ import app from "ags/gtk4/app"
 import { EthernetButton } from "./Ethernet"
 import { WifiButton, WifiPicker } from "./WiFi"
 import { BluetoothButton } from "./Bluetooth"
-import { AudioSlider } from "./Sliders"
+import { VolumeControl } from "./VolumeControl"
 import { makeCloseAnimation } from "../animations"
 
 const PANEL_WIDTH = 300
@@ -62,13 +62,19 @@ export default function ControlPanel() {
         >
           <WifiPicker />
         </revealer>
-        <AudioSlider
+        <VolumeControl
           icon="󰕾"
+          headphonesIcon="󰋋"
+          headphonesMatch="Auriculares"
+          mutedIcon="󰖁"
+          unmutedIcon="󰕾"
           endpointKey="defaultSpeaker"
           fallbackLabel="Output"
         />
-        <AudioSlider
+        <VolumeControl
           icon="󰍬"
+          mutedIcon="󰍭"
+          unmutedIcon="󰍬"
           endpointKey="defaultMicrophone"
           fallbackLabel="Microphone"
         />
