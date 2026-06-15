@@ -18,6 +18,7 @@ export default function ControlPanel() {
   return (
     <window
       name="control-panel"
+      namespace="ags-control-panel"
       application={app}
       anchor={Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT}
       layer={Astal.Layer.OVERLAY}

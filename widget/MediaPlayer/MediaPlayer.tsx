@@ -252,6 +252,7 @@ export default function MediaPlayer() {
   return (
     <window
       name="media-player"
+      namespace="ags-media-player"
       application={app}
       anchor={Astal.WindowAnchor.BOTTOM}
       layer={Astal.Layer.OVERLAY}
