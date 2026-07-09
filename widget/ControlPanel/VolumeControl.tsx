@@ -6,6 +6,24 @@ const wp = AstalWp.get_default()!
 
 type EndpointKey = "defaultSpeaker" | "defaultMicrophone"
 
+// Lists of endpoints to cycle through, keyed by the default endpoint prop.
+const endpointList: Record<EndpointKey, () => AstalWp.Endpoint[]> = {
+  defaultSpeaker: () => wp.audio.get_speakers(),
+  defaultMicrophone: () => wp.audio.get_microphones(),
+}
+
+// Promotes the endpoint after `current` (wrapping around) to be the default.
+function cycleEndpoint(
+  endpointKey: EndpointKey,
+  current: AstalWp.Endpoint | null,
+) {
+  const list = endpointList[endpointKey]()
+  if (!current || list.length < 2) return
+  const idx = list.findIndex((e) => e.id === current.id)
+  const next = list[(idx + 1) % list.length]
+  next?.set_is_default(true)
+}
+
 function SliderLabel({
   icon,
   description,
@@ -85,6 +103,7 @@ export function VolumeControl({
   headphonesMatch,
   mutedIcon,
   unmutedIcon,
+  cycleIcon,
   endpointKey,
   fallbackLabel,
 }: {
@@ -93,6 +112,7 @@ export function VolumeControl({
   headphonesMatch?: string
   mutedIcon: string
   unmutedIcon: string
+  cycleIcon?: string
   endpointKey: EndpointKey
   fallbackLabel: string
 }) {
@@ -131,12 +151,6 @@ export function VolumeControl({
       orientation={Gtk.Orientation.HORIZONTAL}
       spacing={8}
     >
-      <MuteButton
-        mute={mute}
-        mutedIcon={mutedIcon}
-        unmutedIcon={unmutedIcon}
-        onToggle={() => endpoint.peek()?.set_mute(!mute.peek())}
-      />
       <box
         class="volume-control-body"
         orientation={Gtk.Orientation.VERTICAL}
@@ -162,6 +176,21 @@ export function VolumeControl({
           }}
         />
       </box>
+      {cycleIcon && (
+        <button
+          class="volume-control-cycle"
+          valign={Gtk.Align.CENTER}
+          onClicked={() => cycleEndpoint(endpointKey, endpoint.peek())}
+        >
+          <label label={cycleIcon} />
+        </button>
+      )}
+      <MuteButton
+        mute={mute}
+        mutedIcon={mutedIcon}
+        unmutedIcon={unmutedIcon}
+        onToggle={() => endpoint.peek()?.set_mute(!mute.peek())}
+      />
     </box>
   )
 }

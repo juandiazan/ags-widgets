@@ -63,11 +63,12 @@ export default function ControlPanel() {
           <WifiPicker />
         </revealer>
         <VolumeControl
-          icon="󰕾"
+          icon="󰓃"
           headphonesIcon="󰋋"
           headphonesMatch="Auriculares"
           mutedIcon="󰖁"
           unmutedIcon="󰕾"
+          cycleIcon=""
           endpointKey="defaultSpeaker"
           fallbackLabel="Output"
         />
